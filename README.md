@@ -1,16 +1,16 @@
 # node-js
 
-Install node, then:
+Install:  https://nodejs.org
+
+Run:
 ```
 cd modules
 cd events
 ...
 node test-nod.js
 ```
-## How node works
-https://nodejs.org
-
-machine code <- V8(c++) <- JavaScript ( or Node.js(c++) )
+## How Node works
+Machine code <- V8(c++) <- JavaScript ( or Node.js(c++) )
 
 V8 can be downloaded and edited. It is Google opensource JS engine, translates JS to diferent machine languages (ARM, X86-64, etc.)
 
@@ -23,10 +23,20 @@ Apart of C++ functions Node has also JS utilities written for you. Often C wrapp
 ```
 var binding = process.binding('c_function_name')
 ```
-run cli: 
+##### Events
+* system events - libuv(c++)
+* custom events - EventEmitter(js)
+
+JS itself is synchronous (!), however, Node passes events to the event loop (libuv c++ library), where they are processed in OS level (read file e.g.), and returning a callback when it's done. So, the Node is not sitting and waiting for the file to be read. That makes Node not blocking and really fast.
+
+Run cli: 
 ```
 node
 ```
+## Add
+
+*https://babeljs.io translate JS6+ to older*
+
 *Visual Studio Code - seems good IDE - fast with great debuger*
 
 *cli: powershell for windows, more powerful than comand line*
