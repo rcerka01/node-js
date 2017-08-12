@@ -33,10 +33,61 @@ Run cli:
 ```
 node
 ```
+## Npm
+
+Package manager (kind of sbt for JS) https://www.npmjs.com/
+
+Start new project: 
+```
+npm init
+```
+
+Add package: 
+* --save Adds it to the package.json
+* -dev Add only for dev environment
+* -g Add for all projects in the computer
+* ^ Auto update minor versions or patches, but NOT for major
+* ~ Would be only for major)
+```
+npm install moment --save
+npm install jasmine-node --save-dev
+npm install nodemon -g
+```
+"nodemon file.js" use instead of "node file.js", it is automatically restarting server if any file changes in the project
+
+Update all packages: 
+```
+npm update
+```
+## Express
+
+Node framework http://expressjs.com
+
+Can add middleware, like cookies, sessions, login etc.
+
+"passport" - popular for login.
+
+* how to: http://expressjs.com/en/guide/writing-middleware.html
+* available: http://expressjs.com/en/resources/middleware.html
+
+To deal with POST parameters use body parser.
+Install:
+```
+npm install body-parser --save
+```
+
+#### EJS template engine for Express http://ejs.co/ 
+
+Install:
+```
+npm install ejs --save
+```
 ## Add
+
+*https://www.npmjs.com/ NPM opensource JS packages*
 
 *https://babeljs.io translate JS6+ to older*
 
-*Visual Studio Code - seems good IDE - fast with great debuger*
+*https://code.visualstudio.com/ Visual Studio Code - seems good IDE - fast with great debuger*
 
 *cli: powershell for windows, more powerful than comand line*
