@@ -82,6 +82,19 @@ Install:
 ```
 npm install ejs --save
 ```
+
+#### DB
+
+Free 500mb mongo db - https://mlab.com/
+* user: gmail
+* password: usual
+
+Npm:
+```
+npm install mysql --save
+npm install mongoose --save
+```
+
 ## Add
 
 *https://www.npmjs.com/ NPM opensource JS packages*
