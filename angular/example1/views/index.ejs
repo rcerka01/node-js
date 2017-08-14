@@ -1,0 +1,24 @@
+<html ng-app="TestApp">
+    <head>
+        <link href=/assets/style.css type=text/css rel=stylesheet />
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> 
+    </head>
+    <body ng-controller="MainController as vm">
+       <h1>
+           Hallo Angular!
+       </h1>
+        <p><input type="text" ng-model="vm.message"></p>
+        <p>{{ vm.message }}</p>
+
+        <p>
+            <ul>
+                <li ng-repeat="data in vm.people">
+                    {{ data.name }}
+                </li>
+            </ul>
+        </p>
+
+        <script src="/assets/js/app.js"></script>
+    </body>
+</html>

@@ -1,0 +1,26 @@
+<html ng-app="TestApp">
+    <head>
+        <link href=/assets/style.css type=text/css rel=stylesheet />
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> 
+    </head>
+    <body ng-controller="MainController as vm">
+       <h1>
+           Hallo Angular with server data!
+       </h1>
+
+        <p>
+            <ul>
+                <li ng-repeat="data in vm.output">
+                    {{ data.name }}
+                </li>
+            </ul>
+        </p>
+
+        <script>
+            var clientData = <%- JSON.stringify(serverData)  %>;
+        </script>
+
+        <script src="/assets/js/app.js"></script>
+    </body>
+</html>

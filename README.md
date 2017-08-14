@@ -60,7 +60,6 @@ Update all packages:
 npm update
 ```
 ## Express
-
 Node framework http://expressjs.com
 
 Can add middleware, like cookies, sessions, login etc.
@@ -77,23 +76,23 @@ npm install body-parser --save
 ```
 
 #### EJS template engine for Express http://ejs.co/ 
-
 Install:
 ```
 npm install ejs --save
 ```
 
 #### DB
-
-Free 500mb mongo db - https://mlab.com/
-* user: gmail
-* password: usual
-
-Npm:
+Install:
 ```
 npm install mysql --save
 npm install mongoose --save
 ```
+Free 500mb mongo db - https://mlab.com/
+* user: gmail
+* password: usual
+
+#### Angular
+Generate CDN for Angular 1: https://angularjs.org/
 
 ## Add
 
