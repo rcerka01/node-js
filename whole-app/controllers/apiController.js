@@ -20,7 +20,7 @@ module.exports = function(app) {
         });
     });
 
-    app.post("todo", function(req, res) {
+    app.post("/todo", function(req, res) {
         if (req.body.id) {
             Todo.findByIdAndUpdate(req.body.id, {
                 job: req.body.job,
@@ -44,7 +44,7 @@ module.exports = function(app) {
         }
     });
 
-    app.delete("todo", function(req, res) {
+    app.delete("/todo", function(req, res) {
         Todo.findByIdAndRemove(req.body.id, function(err) {
             if (err) throw err;
             res.send("Successfuly deleted!");
