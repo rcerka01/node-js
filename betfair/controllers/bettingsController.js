@@ -1,12 +1,15 @@
 var request = require("request");
 var token = require("../config/config");
 
-var urlCatalogue = "https://api.betfair.com/exchange/betting/rest/v1.0/listEventTypes/";
+var urlCatalogueList = "https://api.betfair.com/exchange/betting/rest/v1.0/listMarketCatalogue/";
+var bodyCatalogueList = { filter: { inPlayOnly: true }, maxResults: 100 }
 	
-
-function options(url) {
+function options(url, body) {
     return {
         url: url,
+        method: "POST",
+        body: body,
+        json: true,
         headers: {
             "Content-Type": "application/json",
             "Accept": "text/json",
@@ -17,36 +20,25 @@ function options(url) {
 
 module.exports = function(app) {
 
-    // // ---------------------------------------------------
-    // app.get("/api/listCatalogue", function(req, res) {
+    // ---------------------------------------------------
+    app.get("/api/listCatalogue", function(req, res) {
  
-    //     function callback(error, response, body) {
-    //         if (!error && response.statusCode == 200) {
-    //             console.log("ok");
-    //             // var jsonRes = JSON.parse(response.body);
-    //             // var output = [];
+        function callback(error, response, body) {
+            if (!error && response.statusCode == 200) {
+                
+                var output = [];
+                body.map(item => 
+                    output.push({
+                        market: item.marketName,
+                        total_matched: item.totalMatched
+                    })
+                );
 
-    //             // jsonRes.map(item => 
-    //             //     output.push({
-    //             //         currency_code: item.marketName   
-    //             //     })
-    //             // );
+                 res.json(output);
 
-    //             // res.json(output);
-    //              res.send("efef");
-    //         }
-    //             else 
-    //                 console.log("not ok");
+            } else throw error;
+        }
 
-    //     }
-
-    //     request.post(options(urlCatalogue), callback).form(
-    //         {
-	//             "filter": { }
-    //         });
-    //         //             {
-	//         //     "filter": { "inPlayOnly": true },
-    //         //     "maxResults" : 20
-    //         // });
-    // });
+        request.post(options(urlCatalogueList, bodyCatalogueList), callback);
+    });
 }
