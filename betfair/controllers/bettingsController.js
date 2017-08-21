@@ -1,10 +1,10 @@
+var conf = require("../config/config");
 var request = require("request");
-var token = require("../config/config");
 
 var urlCatalogueList = "https://api.betfair.com/exchange/betting/rest/v1.0/listMarketCatalogue/";
 var bodyCatalogueList = { filter: { inPlayOnly: true }, maxResults: 100 }
 	
-function options(url, body) {
+function options(url, token, body) {
     return {
         url: url,
         method: "POST",
@@ -13,12 +13,13 @@ function options(url, body) {
         headers: {
             "Content-Type": "application/json",
             "Accept": "text/json",
-            'X-Application': "WNArLQTYiNlpYb8x",
+            'X-Application': conf.user.apiKey,
             'X-Authentication': token }
         }
 };
 
-module.exports = function(app) {
+module.exports = function(app, token) {
+    var utilities = require("./utilities");    
 
     // ---------------------------------------------------
     app.get("/api/listCatalogue", function(req, res) {
@@ -34,11 +35,16 @@ module.exports = function(app) {
                     })
                 );
 
-                 res.json(output);
+                res.json(output);
 
-            } else throw error;
+            } else if (response.statusCode == 400) { 
+                utilities.recoverFromUnauthorisedRequest(app, req, res) 
+             } else {
+                console.log("Unexpected error from " + req.url +", " + error)
+                res.json([]);
+             }
         }
 
-        request.post(options(urlCatalogueList, bodyCatalogueList), callback);
+        request.post(options(urlCatalogueList, token, bodyCatalogueList), callback);
     });
 }

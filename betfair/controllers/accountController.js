@@ -1,21 +1,24 @@
+var conf = require("../config/config");
 var request = require("request");
-var token = require("../config/config");
 
 var urlAccount = "https://api.betfair.com/exchange/account/rest/v1.0/getAccountDetails/";
+var urlFunds = "https://api.betfair.com/exchange/account/rest/v1.0/getAccountFunds/";
 var urlCurrency = "https://api.betfair.com/exchange/account/rest/v1.0/listCurrencyRates/";
 
-function options(url) {
+function options(url, token) {
     return {
         url: url,
         headers: {
             'Content-Type': "application/json",
             "Accept": "text/json",
-            'X-Application': "WNArLQTYiNlpYb8x",
+            'X-Application': conf.user.apiKey,
             'X-Authentication': token }
         }
 };
 
-module.exports = function(app) {
+module.exports = function(app, token) {
+    var utilities = require("./utilities");    
+    
     // ---------------------------------------------------
     app.get("/api/getAccountDetails", function(req, res) {
  
@@ -38,10 +41,16 @@ module.exports = function(app) {
                 }
 
                 res.json(output);
-            }
+
+            } else if (response.statusCode == 400) { 
+                utilities.recoverFromUnauthorisedRequest(app, req, res) 
+             } else {
+                console.log("Unexpected error from " + req.url +", " + error)
+                res.json([]);
+             }
         }
 
-        request(options(urlAccount), callback);
+        request(options(urlAccount, token), callback);
     });
 
     // ---------------------------------------------------
@@ -61,9 +70,44 @@ module.exports = function(app) {
                 );
 
                 res.json(output);
-            }
+
+            } else if (response.statusCode == 400) { 
+                utilities.recoverFromUnauthorisedRequest(app, req, res) 
+             } else {
+                console.log("Unexpected error from " + req.url +", " + error)
+                res.json([]);
+             }
         }
 
-        request.post(options(urlCurrency), callback);
+        request.post(options(urlCurrency, token), callback);
+    });
+
+    // ---------------------------------------------------
+    app.get("/api/getFunds", function(req, res) {
+ 
+        function callback(error, response, body) {
+            if (!error && response.statusCode == 200) {
+
+                var jsonRes = JSON.parse(response.body);
+                var output = {
+                        available_to_bet: jsonRes.availableToBetBalance,   
+                        commision: jsonRes.retainedCommission,
+                        exposure: jsonRes.exposure,   
+                        exposure_limit: jsonRes.exposureLimit,
+                        discount: jsonRes.discountRate,   
+                        points: jsonRes.pointsBalance
+                    }
+
+                res.json(output);
+
+            } else if (response.statusCode == 400) { 
+                utilities.recoverFromUnauthorisedRequest(app, req, res) 
+             } else {
+                console.log("Unexpected error from " + req.url +", " + error)
+                res.json([]);
+             }
+        }
+
+        request.post(options(urlFunds, token), callback);
     });
 }

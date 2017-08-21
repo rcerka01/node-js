@@ -1,3 +1,5 @@
+var conf = require("./config/config");
+
 var express = require('express');
 var app = express();
 
@@ -8,10 +10,7 @@ app.get("/", function(req, res) {
     res.render("index");
 });
 
-var accountController = require("./controllers/accountController");
-var bettingsController = require("./controllers/bettingsController");
-accountController(app);
-bettingsController(app);
+var mainApiController = require('./controllers/mainApiController');
+mainApiController.run(app);
 
-var port = 3000;
-app.listen(port);
+app.listen(conf.app.port);
