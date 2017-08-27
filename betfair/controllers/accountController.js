@@ -65,7 +65,7 @@ module.exports = function(app, token) {
                 jsonRes.map(item => 
                     output.push({
                         currency_code: item.currencyCode,   
-                        rate: item.rate
+                        rate: Number((item.rate).toFixed(3))
                     })
                 );
 

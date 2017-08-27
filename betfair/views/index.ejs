@@ -23,24 +23,24 @@
 
       <h1>Betfair</h1>
       <hr>
-
-      <h3>Two columns with two nested columns</h3>
-      <p>Per the documentation, nesting is easy—just put a row of columns within an existing column. This gives you two columns <strong>starting at desktops and scaling to large desktops</strong>, with another two (equal widths) within the larger column.</p>
-      <p>At mobile device sizes, tablets and down, these columns and their nested columns will stack.</p>
       <div class="row">
         <div class="col-md-8">
 
           <div id="summary" style="font-weight:bold">{ Account details }</div>
-          <div id="funds" style="color:red;"> { Balance }</div>
+          <div id="funds" style="color:red;"> { Balance }</div>   
 
           <div class="row">
-            <div id="currency" class="col-md-6">{ Currency }</div>
-            <div id="catalogue" class="col-md-6">{ Catalogue }</div>
+            <div id="events" class="col-md-4">{ Events }</div>
+            <div id="socerevents" class="col-md-4">{ Socer Events }</div>
+            <!-- <div id="catalogue" class="col-md-2">{ Catalogue }</div>  -->
           </div>
+
         </div>
         <div id="setbet" class="col-md-4"></div>
       </div>
 
+      <hr>
+        <div id="currency">{ Currency }</div>
       <hr>
 
     </div> <!-- /container -->
@@ -49,7 +49,9 @@
   $(document).ready( function() {
     getAccountDetails();
     getCurrencies();
-    gettMarketCatalogueList();
+    // gettMarketCatalogueList();
+    getEventTypesList();
+    getSocerEventsList();
     getFunds();
     setBet();
 });
