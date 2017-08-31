@@ -4,15 +4,16 @@ var dateFormat = require('dateformat');
 
 var urlCatalogueList = "https://api.betfair.com/exchange/betting/rest/v1.0/listMarketCatalogue/";
 var urlEventTypesList = "https://api.betfair.com/exchange/betting/rest/v1.0/listEventTypes/";
-var urlSocerEventsList = "https://api.betfair.com/exchange/betting/rest/v1.0/listEvents/";
 
-var bodyCatalogueList = { filter: { inPlayOnly: true }, maxResults: 100 }
+// { filter: { "inPlayOnly": true } }
+var bodyCatalogueList = { filter: { }, maxResults: 100 }
 var bodyEventTypesList = { filter: { } }
 function bodySocerEventsList(nowIso, tomorrowIso) { return { filter: { eventTypeIds: [ 1 ],
                                       marketStartTime: {
                                         from: nowIso,
                                         to: tomorrowIso     
                                     }}}}
+function bodySocerInPlayEvents(nowIso, tomorrowIso) { return { filter: { eventTypeIds: [ 1 ], inPlayOnly: true }, maxResults : 100 } }
 
 function options(url, token, body) {
     return {
@@ -92,37 +93,8 @@ module.exports = function(app, token) {
     // ****************************************************
     // * List Socer Events
     // ****************************************************
-    app.get("/api/listSocerEvents", function(req, res) {
-        function callback(error, response, body) {
-            if (!error && response.statusCode == 200) {
-                
-                var output = [];
-                body.map(item => 
-                    output.push({
-                        id: item.event.id,
-                        name: item.event.name,
-                        country: item.event.countryCode,
-                        open_date: dateFormat(item.event.openDate,'d mmm yyyy HH:MMtt'),
-                        market_count: item.marketCount
-                    })
-                );
 
-                output.sort( (a,b) => Number(b.market_count) - Number(a.market_count) )
-
-                res.json(output);
-
-            } else if (response.statusCode == 400) { 
-                utilities.recoverFromUnauthorisedRequest(app, req, res) 
-            } else {
-                console.log("Unexpected error from " + req.url + ", " + error)
-                res.json([]);
-            }
-        }
-
-        var now = new Date()
-        var nowIso = dateFormat(now, "isoDateTime")
-        var tomorrowIso = dateFormat(new Date().setDate(now.getDate() + 1), "isoDateTime")
-
-        request.post(options(urlSocerEventsList, token, bodySocerEventsList(nowIso, tomorrowIso)), callback);
-    });
+    var soccerController = require("./soccerController");
+    soccerController("/api/listSoccerEvents", app, options, token, bodySocerEventsList);
+    soccerController("/api/listInPlaySoccerEvents", app, options, token, bodySocerInPlayEvents);
 }
