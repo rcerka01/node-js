@@ -7,22 +7,30 @@
     <meta name="author" content="">
     <link rel="icon" href="../../../../favicon.ico">
 
-    <title>Grid Template for Bootstrap</title>
+    <title>Betfair</title>
 
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" rel="stylesheet">
     <!-- Custom styles for this template -->
     <link href="/assets/css/grid.css" rel="stylesheet">
-    <!-- JQuery -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> 
-
+    <!-- JQuery JSON styles -->
+    <link href="/assets/json/jquery.json-viewer.css" rel="stylesheet">
+    <!-- JQuery js -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <!-- JQuery JSON js -->
+    <script src="/assets/json/jquery.json-viewer.js"></script>
   </head>
 
   <body>
     <div class="container">
-
       <h1>Betfair</h1>
       <hr>
+
+      <div class="logs-area">
+        Logs ...
+      </div>
+      <hr>
+      
       <div class="row">
         <div class="col-md-8">
 
@@ -33,7 +41,6 @@
             <div id="events" class="col-md-4">{ Events }</div>
             <div id="socerevents" class="col-md-4">{ Socer Events }</div>
             <div id="soceringame" class="col-md-4">{ Socer Currently Played }</div>
-            <!-- <div id="catalogue" class="col-md-2">{ Catalogue }</div>  -->
           </div>
 
         </div>
@@ -45,31 +52,41 @@
       <hr>
 
     </div> <!-- /container -->
-<script>
+  <script>
 
-  $(document).ready( function() {
-    getAccountDetails();
-    getCurrencies();
-    // gettMarketCatalogueList();
-    getEventTypesList();
-    getSoccerEventsList();
-    getSoccerInGameEventsList()
-    getFunds();
-    setBet();
-});
+    $(document).ready( function() {
 
-// FAKE FUNCTION
-function setBet() {
-  var bet = "<p>Conditions are met, set bet 10.00 GBP<br>Response: <span style='color:red;'>[ERROR]</span></p>";
-  for (var i = 1; i <= 20; i++) {
-    (function(index) {
-        setTimeout(function() { $('#setbet').append(bet); }, i * 3000);
-    })(i);
+      // accounts
+      getAccountDetails();
+      getCurrencies();
+      getFunds();
+
+      // bets
+      getEventTypesList();
+      getSoccerEventsList();
+      getSoccerInGameEventsList()
+
+      // json outut
+      setMouseOver("a#ingameitem", "div#pop-up")          
+
+      // fake
+      setBet();
+  });
+
+  // FAKE FUNCTION
+  function setBet() {
+    var bet = "<p>Conditions are met, set bet 10.00 GBP<br>Response: <span style='color:red;'>[ERROR]</span></p>";
+    for (var i = 1; i <= 20; i++) {
+      (function(index) {
+          setTimeout(function() { $('#setbet').append(bet); }, i * 3000);
+      })(i);
+    }
   }
-}
 
-</script>
+ </script>
  <script src="/assets/js/account.js"></script>
  <script src="/assets/js/bets.js"></script>
+ <script src="/assets/js/util.js"></script>
+
 </body>
 </html>
