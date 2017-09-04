@@ -2,8 +2,9 @@ var conf = require("../config/config");
 var request = require("request");
 var dateFormat = require('dateformat');
 
-var urlCatalogueList = "https://api.betfair.com/exchange/betting/rest/v1.0/listMarketCatalogue/";
 var urlEventTypesList = "https://api.betfair.com/exchange/betting/rest/v1.0/listEventTypes/";
+var urlCatalogueList = "https://api.betfair.com/exchange/betting/rest/v1.0/listMarketCatalogue/";
+var urlBookList = "https://api.betfair.com/exchange/betting/rest/v1.0/listMarketBook/";
 
 var bodyEventTypesList = { filter: { } }
 function bodySocerEventsList(nowIso, tomorrowIso) { return { filter: { eventTypeIds: [ 1 ],
@@ -11,7 +12,10 @@ function bodySocerEventsList(nowIso, tomorrowIso) { return { filter: { eventType
                                         from: nowIso,
                                         to: tomorrowIso     
                                     }}}}
-function bodySocerInPlayEvents(nowIso, tomorrowIso) { return { filter: { eventTypeIds: [ 1 ], inPlayOnly: true }, maxResults : 100 } }
+function bodySocerInPlayEvents(nowIso, tomorrowIso) { return { filter: { eventTypeIds: [ 1 ],
+                                        inPlayOnly: true },
+                                        maxResults : 100 
+                                    }}
 function bodyCatalogueList(eventIds) { return { 	filter: {
                                             eventIds: [eventIds]
                                         },
@@ -25,6 +29,11 @@ function bodyCatalogueList(eventIds) { return { 	filter: {
                                             ],
                                         maxResults: 10
                                     }}
+function bodyBookList(marketIds) { return { marketIds: [marketIds],
+                                            priceProjection: {
+                                                priceData: ["EX_BEST_OFFERS", "EX_TRADED"],
+                                                virtualise: true
+                                            }}}
 
 function options(url, token, body) {
     return {
@@ -70,6 +79,33 @@ module.exports = function(app, token) {
     });
 
     // ****************************************************
+    // * List bet
+    // ****************************************************
+    app.get("/api/listBet/:marketid", function(req, res) {
+        function callback(error, response, body) {
+            if (!error && response.statusCode == 200) {
+                
+                var output = [];
+                body.map(item => {                    
+                    output.push({
+                        item
+                    })
+            });
+
+           res.json(output);
+            
+            } else if (response.statusCode == 400) { 
+                utilities.recoverFromUnauthorisedRequest(app, req, res) 
+             } else {
+                console.log("Unexpected error from " + req.url +", " + error)
+                res.json([]);
+             }
+        }
+
+        request.post(options(urlBookList, token, bodyBookList(req.params.marketid)), callback);
+    });
+
+    // ****************************************************
     // * List Event Types
     // ****************************************************
     app.get("/api/listEventTypes", function(req, res) {
@@ -92,7 +128,7 @@ module.exports = function(app, token) {
             } else if (response.statusCode == 400) { 
                 utilities.recoverFromUnauthorisedRequest(app, req, res) 
             } else {
-                console.log("Unexpected error from " + req.url +", " + error)
+                console.log("Unexpected error from " + req.url + ", " + error)
                 res.json([]);
             }
         }
