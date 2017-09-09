@@ -25,12 +25,14 @@
     <div class="container">
       <h1>Betfair</h1>
       <hr>
-
+      <div id="countdown" style="color:green;">Initial load...</div>
+      
       <div class="logs-area">
         Logs ...
       </div>
+
       <hr>
-      
+
       <div class="row">
         <div class="col-md-8">
 
@@ -50,40 +52,23 @@
       <hr>
         <div id="currency">{ Currency }</div>
       <hr>
-
+      
     </div> <!-- /container -->
+
   <script>
-
     $(document).ready( function() {
+      var refreshInterval = 60;
+      run(refreshInterval);
+      setInterval(function() {
+        run(refreshInterval);
+      }, refreshInterval * 1000); 
+    });
+  </script>
 
-      // accounts
-      getAccountDetails();
-      getCurrencies();
-      getFunds();
-
-      // bets
-      getEventTypesList();
-      getSoccerEventsList();
-      getSoccerInGameEventsList()        
-
-      // fake
-      setBet();
-  });
-
-  // FAKE FUNCTION
-  function setBet() {
-    var bet = "<p>Conditions are met, set bet 10.00 GBP<br>Response: <span style='color:red;'>[ERROR]</span></p>";
-    for (var i = 1; i <= 20; i++) {
-      (function(index) {
-          setTimeout(function() { $('#setbet').append(bet); }, i * 3000);
-      })(i);
-    }
-  }
-
- </script>
- <script src="/assets/js/account.js"></script>
- <script src="/assets/js/bets.js"></script>
- <script src="/assets/js/util.js"></script>
+  <script src="/assets/js/account.js"></script>
+  <script src="/assets/js/bets.js"></script>
+  <script src="/assets/js/util.js"></script>
+  <script src="/assets/js/main.js"></script>
 
 </body>
 </html>
