@@ -50,5 +50,6 @@ hr {
     height: 300px;
     background-color: #ffefef;
     padding: 10px;
+    overflow: scroll;
 }
        

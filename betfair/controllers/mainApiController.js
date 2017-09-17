@@ -4,11 +4,14 @@ var tokenGenerator = require("../config/tokenGenerator");
 
 module.exports = { run: function(app) { 
         function returnValidToken(error, response, body) {
-            var validToken = body.sessionToken;
-            accountController(app, validToken);
-            bettingsController(app, validToken);
+            if (!error) {
+                var validToken = body.sessionToken;
+                accountController(app, validToken);
+                bettingsController(app, validToken);
+            } else {
+                console.log("Session token error: " + error);
+            }
         }
-
         tokenGenerator(returnValidToken);
     }
 }
