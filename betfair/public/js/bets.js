@@ -60,13 +60,18 @@ function getSoccerInGameEventsList(){
     url: "/api/listInPlaySoccerEvents",
     success: function(msg) {
 
-      // init
+      // output main html
       var output = [];
+      // if true outputs dividing line in logs
       var updated = false;
+      // temporary current list
       var currentList = [];
+      // total games in play
       var total = msg.length;
 
-      // loop all recieved games
+      // LOOP CURRENT -------------------------------------------------
+
+      // loop all recieved games (main loop)
       for(var i in msg) {
           
         // current game (item)
@@ -84,67 +89,45 @@ function getSoccerInGameEventsList(){
           + msg[i].country + "</span>, Market: <strong>"            
           + msg[i].market_count + "</strong></span></a></li><div id='ingameitem_" + i + "' class='pop-up'></div>");
 
+        // add to output array for main html output  
         output.push(outputItem);
 
-        // if app is not just started and we have prev values
-        if (prevGameArr.length > 0) {
-
-          // new and finished flags
-          var isNew = true;
-          var isFinished = true;
+        // is new flag def
+        var isNew = true;
           
-          // loop previous values
-          for(var ii in prevGameArr) {
+        // loop previous values in current loop
+        for(var ii in prevGameArr) {
+          
+          // update
+          if (prevGameArr[ii].name == item.name &&
+            prevGameArr[ii].market_count != item.market_count) {
 
-            // update
-            if (prevGameArr[ii].name == item.name &&
-              prevGameArr[ii].market_count != item.market_count) {
+            $('#logs').prepend("<p style='font-size:8px;'>["+ Date() +"]<span style='font-size:10px;'><span style='color:brown;'> UPDATE:</span> " + 
+            prevGameArr[ii].name + " " +
+            " MARKET COUNT CHANGED FROM " + 
+            prevGameArr[ii].market_count + " TO " + 
+            item.market_count + "</span></p>");
 
-              $('#logs').prepend("<p style='font-size:8px;'>["+ Date() +"]<span style='font-size:10px;'><span style='color:yellow;'> UPDATE:</span> " + 
-              prevGameArr[ii].name + " " +
-              " MARKET COUNT CHANGED FROM " + 
-              prevGameArr[ii].market_count + " TO: " + 
-              item.market_count + "</span></p>");
-
-              isFinished = false
-
-              updated = true;                
-            } 
-
-            // finished
-            else if (prevGameArr[ii].name == item.name) {
-              isFinished = false;
-            }
-
-            // new
-            for (var iii in msg) {
-              if (msg[iii].name == prevGameArr[ii].name) {
-                isNew = false;
-              }
-            }
+            updated = true;                
           }
 
-          // output finished
-          if (isFinished) {
-            $('#logs').prepend("<p style='font-size:8px;'>["+ Date() +"] <span style='font-size:10px;'><span style='color:red;'> FINISHED:</span> " +
-            item.name + " " +
-            item.open_date + " " +
-            item.country + " " +
-            item.market_count + " IS FINISHED</span></p>");
-
-            updated = true;              
+          // check if new
+          if (prevGameArr[ii].name == item.name) {
+            isNew = false
           }
 
-          // output new
-          if (isNew) {
-            $('#logs').prepend("<p style='font-size:8px;'>["+ Date() +"] <span style='font-size:10px;'><span style='color:green;'> NEW:</span> " +
-            item.name + " " +
-            item.open_date + " " +
-            item.country + " " +
-            item.market_count + " IS STARTED</span>");
+        // prev loop end
+        }
 
-            updated = true;              
-          }
+        // output if new
+        if (isNew) {
+          $('#logs').prepend("<p style='font-size:8px;'>["+ Date() +"] <span style='font-size:10px;'><span style='color:green;'> NEW:</span> " +
+          item.name + " " +
+          item.open_date + " " +
+          item.country + " " +
+          item.market_count + " IS STARTED</span>");
+
+          updated = true;              
         }
 
         // mouseovers in page
@@ -152,6 +135,40 @@ function getSoccerInGameEventsList(){
         soccerBetting(msg[i].id, "div#ingameitem_" + i); 
           
         currentList.push(item);
+
+      // main loop end
+      }
+
+      // is finished flag def
+      var isFinished = true;
+
+      // LOOP PREV ------------------------------------------------- 
+      
+      // prev loop
+      for(var j in prevGameArr) {
+
+        //set finished flag
+        isFinished = true;
+
+        // current loop in prev
+        for(var jj in msg) {
+           if (prevGameArr[j].name == msg[jj].name) {
+             isFinished = false
+           }
+        }
+
+        // output if finished
+        if (isFinished) {
+          $('#logs').prepend("<p style='font-size:8px;'>["+ Date() +"] <span style='font-size:10px;'><span style='color:red;'> FINISHED:</span> " +
+          prevGameArr[j].name + " " +
+          prevGameArr[j].open_date + " " +
+          prevGameArr[j].country + " " +
+          prevGameArr[j].market_count + " IS FINISHED</span></p>");
+
+          updated = true;              
+        }
+    
+      // prev loop end
       }
 
       // current to previous
